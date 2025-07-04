@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "xiaodu_mcp_server": {
+            "url": "https://xiaodu.baidu.com/dueros_mcp_server/sse",
+            "headers": {
+                "Access_Token": "121.960e9086085490c086b35b3c3b7d8c83.YQpIy_mIRzOa6_r-4B763f3J8oXRjIuLdR6SCRO.zgLegg"
+            },
+            "timeout": 30,
+            "sse_read_timeout": 300
+        }
+    }
+}
