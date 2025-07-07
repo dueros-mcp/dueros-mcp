@@ -51,7 +51,7 @@ SSE（Server-Sent Events）模式直接连接到我们的服务器，配置简�
 1. 打开 Cherry Studio → 配置 → MCP服务器
 2. 添加新的MCP服务器：
    - **名称**: `xiaodu_mcp`
-   - **URL**: `https://xiaodu.baidu.com/dueros-mcp-server/sse`
+   - **URL**: `https://xiaodu.baidu.com/dueros_mcp_server/sse`
    - **请求头**: `ACCESS_TOKEN=${your_access_token}`
 
 3. 启用服务器并开始使用
