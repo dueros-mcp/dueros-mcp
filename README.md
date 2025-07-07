@@ -1,7 +1,6 @@
 # 小度智能终端 MCP Server 
 
 [![MCP](https://img.shields.io/badge/MCP-Compatible-blue)](https://modelcontextprotocol.io/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 一个基于 Model Context Protocol (MCP) 的小度智能终端服务，让AI应用能够无缝控制小度设备。支持Claude、Cursor、Cline等所有兼容MCP协议的平台。
 
@@ -188,10 +187,6 @@ which mcp-proxy
 - `ImageContent`: 图像内容对象
   - `content` (string): Base64编码的JPEG格式图像数据
   - `content_type` (string): 图像内容类型，固定为 "image/jpeg"
-
-## 📄 许可证
-
-本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
 ## 🙏 致谢
 
