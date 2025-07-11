@@ -1,7 +1,8 @@
 {
     "mcpServers": {
         "xiaodu_mcp_server": {
-            "url": "https://xiaodu.baidu.com/dueros_mcp_server/sse",
+            "url": "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
+            "transport_type": "streamablehttp",
             "headers": {
                 "Access_Token": "${ACCESS_TOKEN}"
             },
