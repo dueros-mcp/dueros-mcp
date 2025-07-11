@@ -35,9 +35,9 @@
 
 我们提供两种接入方式以满足不同场景的需求：
 
-### 方式一：SSE 接入（推荐开发者）
+### 方式一：StreamableHTTP 接入
 
-SSE（Server-Sent Events）模式直接连接到我们的服务器，配置简单，适合开发者使用。
+StreamableHTTP模式直接连接到我们的服务器。
 
 #### 支持的工具
 - **Cherry Studio** ✅（推荐，支持请求头配置）
@@ -47,17 +47,18 @@ SSE（Server-Sent Events）模式直接连接到我们的服务器，配置简�
 
 **以 Cherry Studio 为例：**
 
-1. 打开 Cherry Studio → 配置 → MCP服务器
+1. 打开 Cherry Studio → 设置 → MCP服务器
 2. 添加新的MCP服务器：
    - **名称**: `xiaodu_mcp`
-   - **URL**: `https://xiaodu.baidu.com/dueros_mcp_server/sse`
+   - **类型**: `可流式传输的HTTP（streamableHttp）`
+   - **URL**: `https://xiaodu.baidu.com/dueros_mcp_server/mcp/`
    - **请求头**: `ACCESS_TOKEN=${your_access_token}`
 
 3. 启用服务器并开始使用
 
-### 方式二：Stdio 接入（推荐AI工具）
+### 方式二：Stdio 接入
 
-Stdio模式通过本地代理服务连接，兼容性更强，适合各种AI工具使用。
+Stdio模式需要通过本地代理服务连接，这里推荐使用mcp-proxy。
 
 #### 支持的工具
 - **Cursor** ✅
@@ -95,7 +96,7 @@ which mcp-proxy
     "xiaodu_mcp": {
       "command": "/Users/.local/bin/mcp-proxy",
       "args": [
-        "https://xiaodu.baidu.com/dueros_mcp_server/sse",
+        "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
         "--headers",
         "ACCESS_TOKEN",
         "your_access_token_here"
@@ -188,10 +189,47 @@ which mcp-proxy
   - `content` (string): Base64编码的JPEG格式图像数据
   - `content_type` (string): 图像内容类型，固定为 "image/jpeg"
 
+## 🧪 测试客户端
+
+为了方便开发者测试MCP服务器功能，我们提供了一个简单的测试客户端：`simple_chatbot`，该客户端支持StreamableHTTP和Stdio两种接入方式。
+
+### 使用方法
+
+1. **配置访问令牌**
+   
+   编辑 `clients/simple_chatbot/servers_config.json` 文件，将其中的 `Access_Token` 替换为您的访问令牌：
+   ```json
+   {
+       "mcpServers": {
+           "xiaodu_mcp_server": {
+               "url": "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
+               "transport_type": "streamablehttp",
+               "headers": {
+                   "Access_Token": "your_access_token_here"
+               },
+               "timeout": 30,
+               "sse_read_timeout": 300
+           }
+       }
+   }
+   ```
+
+2. **设置OpenAI API密钥**
+   
+   导出环境变量 `LLM_API_KEY`，这是您的OpenAI API密钥：
+   ```bash
+   export LLM_API_KEY=your_openai_api_key_here
+   ```
+
+3. **运行测试客户端**
+   
+   进入客户端目录并运行：
+   ```bash
+   cd clients/simple_chatbot
+   python simple_chatbot.py
+   ```
+
 ## 🙏 致谢
 
-- [百度DuerOS](https://dueros.baidu.com/) - 提供小度智能设备平台支持
 - [Model Context Protocol](https://modelcontextprotocol.io/) - MCP协议标准
 - [mcp-proxy](https://github.com/sparfenyuk/mcp-proxy) - 优秀的MCP代理工具
-- 所有为本项目做出贡献的开发者和用户
-
