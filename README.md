@@ -151,7 +151,6 @@ which mcp-proxy
 
 #### 参数
 - `command` (string, required): 要发送给设备的语音指令文本
-- `userid` (string, required): 用户标识符
 - `cuid` (string, required): 设备标识符
 - `client_id` (string, required): 客户端标识符
 
@@ -166,7 +165,6 @@ which mcp-proxy
 
 #### 参数
 - `text` (string, required): 要朗读的文本内容
-- `userid` (string, required): 用户标识符
 - `cuid` (string, required): 设备标识符
 - `client_id` (string, required): 客户端标识符
 
@@ -180,7 +178,6 @@ which mcp-proxy
 触发支持摄像头的小度设备进行拍照并返回图像内容。
 
 #### 参数
-- `userid` (string, required): 用户标识符
 - `cuid` (string, required): 设备标识符
 - `client_id` (string, required): 客户端标识符
 
