@@ -119,7 +119,7 @@ which mcp-proxy
     "xiaodu_mcp": {
       "command": "/path/to/mcp-proxy",
       "args": [
-        "https://xiaodu.baidu.com/dueros_mcp_server/sse",
+        "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
         "--headers",
         "ACCESS_TOKEN",
         "your_access_token_here"
