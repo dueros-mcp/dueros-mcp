@@ -99,7 +99,9 @@ which mcp-proxy
         "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
         "--headers",
         "ACCESS_TOKEN",
-        "your_access_token_here"
+        "your_access_token_here",
+        "--transport",
+        "streamablehttp"
       ]
     }
   }
@@ -122,7 +124,9 @@ which mcp-proxy
         "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
         "--headers",
         "ACCESS_TOKEN",
-        "your_access_token_here"
+        "your_access_token_here",
+        "--transport",
+        "streamablehttp"
       ]
     }
   }
