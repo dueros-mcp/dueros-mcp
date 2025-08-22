@@ -1,0 +1,29 @@
+{
+  "models": {
+    "main_model": "openrouter/anthropic/claude-sonnet-4",
+    "classification_model": "openrouter/openai/gpt-4.1-mini"
+  },
+  "elasticsearch": {
+    "host": "http://localhost:9200",
+    "username": "",
+    "password": "",
+    "artwork_index": "artwork_info_816"
+  },
+  "mcpServers": {
+    "xiaodu_mcp_server": {
+      "url": "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
+      "transport": "streamable_http",
+      "headers": {
+        "Access_Token": "${ACCESS_TOKEN}"
+      },
+      "timeout": 30,
+      "sse_read_timeout": 300
+    },
+    "tavily_mcp_server": {
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey=${TAVILY_API_KEY}",
+      "transport": "streamable_http",
+      "timeout": 30,
+      "sse_read_timeout": 300
+    }
+  }
+}

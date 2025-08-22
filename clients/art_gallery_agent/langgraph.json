@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "agent": "./art_gallery_system/graph.py:graph"
+  },
+  "env": ".env"
+}
