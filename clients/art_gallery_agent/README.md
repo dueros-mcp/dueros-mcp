@@ -91,7 +91,7 @@ asyncio.run(initialize_graph_tools())
 ```bash
 conda create -n art_gallery_agent python=3.11
 conda activate art_gallery_agent
-pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install -r requirements.txt
 ```
 
 ### 创建配置文件
@@ -110,22 +110,7 @@ cp .env.example .env
 > 配置加载规则：程序会在同目录或当前工作目录下查找 `.env` 文件。
 
 ### 基本使用
-```python
-import asyncio
-from art_gallery_system.graph import graph
-from art_gallery_system.state import MultiAgentState
-from langchain_core.messages import HumanMessage
-
-async def main():
-    state = MultiAgentState(messages=[HumanMessage(content="给我推荐一幅梵高的画作到小度设备")])
-    result = await graph.ainvoke(state)
-    print(result)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-> 包名说明：源码中的导入使用 `art_gallery_system.*`。若直接以源码运行，可在仓库根目录创建软链接以匹配包名：
+在langgraph.json的同级目录下执行
 ```bash
-ln -s clients/art_gallery_agent/art_gallery_system art_gallery_system
+langgraph dev
 ```
