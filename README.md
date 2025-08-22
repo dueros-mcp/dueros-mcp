@@ -6,10 +6,11 @@
 
 ## ✨ 特性
 
-- 🎯 **开放式控制** - 通过自然语言指令控制小度设备
-- 🔊 **语音播报** - 让小度设备朗读指定文本
-- 📸 **实时拍照** - 获取支持摄像头的小度设备的实时图像
-- 📱 **设备管理** - 获取用户绑定的在线设备列表
+- **开放式控制** - 通过自然语言指令控制小度设备
+- **语音播报** - 让小度设备朗读指定文本
+- **实时拍照** - 获取支持摄像头的小度设备的实时图像
+- **设备管理** - 获取用户绑定的在线设备列表
+- **资源推送** - 推送图片、视频、音频到小度设备
 
 ## 📋 目录
 
@@ -190,45 +191,25 @@ which mcp-proxy
   - `content` (string): Base64编码的JPEG格式图像数据
   - `content_type` (string): 图像内容类型，固定为 "image/jpeg"
 
-## 🧪 测试客户端
+### 5. 资源推送 (`push_resource_to_xiaodu`)
 
-为了方便开发者测试MCP服务器功能，我们提供了一个简单的测试客户端：`simple_chatbot`，该客户端支持StreamableHTTP和Stdio两种接入方式。
+推图片/图片+背景音/视频/音频 到小度设备。
 
-### 使用方法
+#### 参数
+- `resource_type` (string, required): 资源类型，支持 "image"、"image_with_bgm"、"video"、"audio"
+- `cuid` (string, required): 设备CUID
+- `client_id` (string, required): 设备client_id
+- `image_url` (string, required): 图片地址（image / image_with_bgm 必填）
+- `bgm_url` (string, required): 背景音地址（image_with_bgm 必填）
+- `video_url` (string, required): 视频地址（video 必填）
+- `audio_url` (string, required): 音频地址（audio 必填）
+- `timeout` (int, optional): 超时时间（秒）
 
-1. **配置访问令牌**
-   
-   编辑 `clients/simple_chatbot/servers_config.json` 文件，将其中的 `Access_Token` 替换为您的访问令牌：
-   ```json
-   {
-       "mcpServers": {
-           "xiaodu_mcp_server": {
-               "url": "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
-               "transport_type": "streamablehttp",
-               "headers": {
-                   "Access_Token": "your_access_token_here"
-               },
-               "timeout": 30,
-               "sse_read_timeout": 300
-           }
-       }
-   }
-   ```
+## 客户端示例
 
-2. **设置OpenAI API密钥**
-   
-   导出环境变量 `LLM_API_KEY`，这是您的OpenAI API密钥：
-   ```bash
-   export LLM_API_KEY=your_openai_api_key_here
-   ```
+Simple Chatbot: [clients/simple_chatbot/README.md](clients/simple_chatbot/README.md)
 
-3. **运行测试客户端**
-   
-   进入客户端目录并运行：
-   ```bash
-   cd clients/simple_chatbot
-   python simple_chatbot.py
-   ```
+Art Gallery Agent: [clients/art_gallery_agent/README.md](clients/art_gallery_agent/README.md)
 
 ## 🙏 致谢
 
