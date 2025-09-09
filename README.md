@@ -38,13 +38,30 @@
 
 ### 方式一：StreamableHTTP 接入
 
-StreamableHTTP模式直接连接到我们的服务器。
+StreamableHTTP模式直接连接到我们的服务器（要求你使用的客户端支持StreamableHTTP方式， 并支持传递headers参数）。
 
 #### 支持的工具
-- **Cherry Studio** ✅（推荐，支持请求头配置）
+- **Cursor, Cherry Studio** ✅（推荐）
 - **自定义客户端** ✅
 
 #### 配置步骤
+**以 Cursor 为例：**
+
+1. 打开 Cursor → 设置 → MCP & Integrations
+2. 在Mcp Tools配置项中添加：
+```json
+{
+  "mcpServers": {
+    "xiaodu-mcp": {
+      "url": "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
+      "headers": {
+        "ACCESS_TOKEN": "${your_access_token}"
+      }
+    }
+  }
+}
+```
+3. 在会话中选择 Agent 模式开始使用
 
 **以 Cherry Studio 为例：**
 
@@ -57,12 +74,17 @@ StreamableHTTP模式直接连接到我们的服务器。
 
 3. 启用服务器并开始使用
 
+**开发者自定义Agent:**
+1. 参考本代码库提供的[Demo](clients)
+2. Demo中共提供了两种封装程度（、 Agent调用mcp-server）的使用示例
+    - 直接调用mcp-server：[simple_chatbot](clients/simple_chatbot) 使用官方mcp python库直接调用mcp-server
+    - Agent调用mcp-server : [art_gallery_agent](clients/art_gallery_agent) 使用langGraph框架在Agent应用中调用mcp-server
+
 ### 方式二：Stdio 接入
 
 Stdio模式需要通过本地代理服务连接，这里推荐使用mcp-proxy。
 
 #### 支持的工具
-- **Cursor** ✅
 - **Claude Desktop** ✅
 - **Cline** ✅
 - **其他支持MCP的工具** ✅
@@ -85,32 +107,6 @@ which mcp-proxy
 ```
 
 **第二步：配置AI工具**
-
-**以 Cursor 为例：**
-
-1. 打开 Cursor → 设置 → MCP
-2. 编辑 `mcp.json` 配置文件：
-
-```json
-{
-  "mcpServers": {
-    "xiaodu_mcp": {
-      "command": "/Users/.local/bin/mcp-proxy",
-      "args": [
-        "https://xiaodu.baidu.com/dueros_mcp_server/mcp/",
-        "--headers",
-        "ACCESS_TOKEN",
-        "your_access_token_here",
-        "--transport",
-        "streamablehttp"
-      ]
-    }
-  }
-}
-```
-
-3. 保存配置，重启Cursor
-4. 在会话中选择 **Agent** 模式开始使用
 
 **Claude Desktop 配置示例：**
 
