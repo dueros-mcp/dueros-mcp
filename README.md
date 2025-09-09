@@ -76,7 +76,7 @@ StreamableHTTP模式直接连接到我们的服务器（要求你使用的客户
 
 **开发者自定义Agent:**
 1. 参考本代码库提供的[Demo](clients)
-2. Demo中共提供了两种封装程度（、 Agent调用mcp-server）的使用示例
+2. Demo中共提供了两种封装程度的使用示例
     - 直接调用mcp-server：[simple_chatbot](clients/simple_chatbot) 使用官方mcp python库直接调用mcp-server
     - Agent调用mcp-server : [art_gallery_agent](clients/art_gallery_agent) 使用langGraph框架在Agent应用中调用mcp-server
 
