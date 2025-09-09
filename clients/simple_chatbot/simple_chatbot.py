@@ -10,7 +10,7 @@ from typing import Any
 
 import httpx
 from dotenv import load_dotenv
-from mcp import ClientSession, StdioServerParameters  # MCP是Multimodal Community Protocol的缩写，一个用于连接AI模型和工具的协议
+from mcp import ClientSession, StdioServerParameters  # MCP是Model Context Protocol的缩写，一个用于连接AI模型和工具的协议
 from mcp.client.stdio import stdio_client  # MCP标准输入/输出客户端，用于与服务器通信
 from mcp.client.streamable_http import streamablehttp_client  # StreamableHTTP客户端，用于与支持StreamableHTTP的服务器通信
 from mcp.types import ImageContent, CallToolResult
