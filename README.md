@@ -238,7 +238,7 @@ which mcp-proxy
   - `task_type`：任务类型
   - `status`：`queued` / `running` / `succeeded` / `failed`
   - `progress`：任务进度
-  - `result`：任务结果。录像成功时包含 `video_url`、`bos_key`、`file_size`、`record_time_ms`
+  - `result`：任务结果。录像成功时包含 `video_url`、`file_size`、`record_time_ms`
   - `error`：任务失败时的错误信息
 
 ---
