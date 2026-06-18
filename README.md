@@ -13,6 +13,7 @@
 - **统一任务查询**：查询长任务执行状态与结果
 - **设备管理**：获取用户绑定的在线设备列表
 - **资源推送**：推送图片、视频、音频到小度设备
+- **技能查询与打开**：查询当前设备可打开的小度技能，并按 `app_key` 下发打开指令
 
 ## 📋 目录
 
@@ -258,6 +259,72 @@ which mcp-proxy
 - `audio_url` (string, required)：音频地址（`audio` 必填）
 - `timeout` (int, optional)：超时时间（秒）
 
+---
+
+### 8. 查询小度技能 (`query_xiaodu_skills`)
+
+查询当前 MCP 支持打开的小度技能列表。该工具用于把用户的自然语言描述转换为可打开技能候选，模型应根据返回的名称和简介选择合适的 `app_key`，再调用 `xiaodu_open_skill` 打开。
+
+#### 参数
+
+- `query` (string, required)：查询词，不允许为空。可以是用户提到的应用名、技能名；如果按类型查找，必须使用精确类型 key，例如 `生活`、`游戏`、`教育`、`音乐`、`视频`
+- `cuid` (string, required)：设备 CUID
+- `client_id` (string, required)：设备 client_id
+- `page` (int, optional)：页码，默认 `1`
+- `page_size` (int, optional)：每页数量，默认 `10`，最大 `20`
+
+#### 返回值
+
+- `List[Dict[str, Any]]`：技能候选列表。每个候选至少包含：
+  - `app_key`：打开技能时使用的唯一标识
+  - `name`：技能名称
+  - `description`：技能简介
+  - `disabled`：技能是否处于禁用状态
+  - 可能还包含 `icon`、`skill_type`、`package_name`、`external` 等展示辅助字段
+
+#### 示例
+
+```python
+skills = await client.call_tool("query_xiaodu_skills", {
+    "query": "音乐",
+    "cuid": "your_device_cuid",
+    "client_id": "your_device_client_id",
+    "page": 1,
+    "page_size": 10
+})
+```
+
+---
+
+### 9. 打开小度技能 (`xiaodu_open_skill`)
+
+按 `app_key` 打开一个小度技能。`app_key` 必须来自 `query_xiaodu_skills` 的查询结果，服务端会根据该 `app_key` 找回打开凭证，并向指定小度设备发送技能打开指令。
+
+#### 参数
+
+- `app_key` (string, required)：`query_xiaodu_skills` 返回的技能 key
+- `cuid` (string, required)：设备 CUID
+- `client_id` (string, required)：设备 client_id
+
+#### 返回值
+
+- `Dict[str, Any]`
+  - `success`：是否成功下发打开指令
+  - `message`：结果说明
+  - `app_key`：本次打开使用的技能 key
+  - `name`：技能名称
+  - `push_result`：PushService 下发结果
+
+#### 示例
+
+```python
+result = await client.call_tool("xiaodu_open_skill", {
+    "app_key": "market:query_session_id:item_key",
+    "cuid": "your_device_cuid",
+    "client_id": "your_device_client_id"
+})
+```
+
 ## 📌 使用建议
 
 ### 1. 拍照与录像的并发建议
@@ -276,6 +343,19 @@ which mcp-proxy
 - 默认录制时长为 `5000ms`
 - 最大录制时长为 `120000ms`
 - 建议优先使用短视频场景，避免不必要的长任务占用
+
+### 4. 技能打开的使用方式
+
+推荐按两步使用：
+
+1. 调用 `query_xiaodu_skills` 查询候选技能
+2. 从返回结果中选择合适的 `app_key`，再调用 `xiaodu_open_skill`
+
+注意事项：
+
+- 不要手写或复用过期的 `app_key`，它是查询结果中的打开凭证。
+- 如果打开时返回“应用选择已过期，请重新查询”，需要重新调用 `query_xiaodu_skills` 获取新的 `app_key`。
+- 如果返回多个候选，应根据 `name` 和 `description` 让用户确认要打开哪一个。
 
 ## 客户端示例
 
