@@ -263,7 +263,7 @@ which mcp-proxy
 
 ### 8. 查询小度技能 (`query_xiaodu_skills`)
 
-查询当前 MCP 支持打开的小度技能列表。该工具用于把用户的自然语言描述转换为可打开技能候选，模型应根据返回的名称和简介选择合适的 `app_key`，再调用 `xiaodu_open_skill` 打开。
+查询当前 MCP 支持打开的小度技能列表。
 
 #### 参数
 
@@ -282,23 +282,11 @@ which mcp-proxy
   - `disabled`：技能是否处于禁用状态
   - 可能还包含 `icon`、`skill_type`、`package_name`、`external` 等展示辅助字段
 
-#### 示例
-
-```python
-skills = await client.call_tool("query_xiaodu_skills", {
-    "query": "音乐",
-    "cuid": "your_device_cuid",
-    "client_id": "your_device_client_id",
-    "page": 1,
-    "page_size": 10
-})
-```
-
 ---
 
 ### 9. 打开小度技能 (`xiaodu_open_skill`)
 
-按 `app_key` 打开一个小度技能。`app_key` 必须来自 `query_xiaodu_skills` 的查询结果，服务端会根据该 `app_key` 找回打开凭证，并向指定小度设备发送技能打开指令。
+按 `app_key` 打开一个小度技能。
 
 #### 参数
 
@@ -314,16 +302,6 @@ skills = await client.call_tool("query_xiaodu_skills", {
   - `app_key`：本次打开使用的技能 key
   - `name`：技能名称
   - `push_result`：PushService 下发结果
-
-#### 示例
-
-```python
-result = await client.call_tool("xiaodu_open_skill", {
-    "app_key": "market:query_session_id:item_key",
-    "cuid": "your_device_cuid",
-    "client_id": "your_device_client_id"
-})
-```
 
 ## 📌 使用建议
 
