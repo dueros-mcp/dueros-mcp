@@ -1,0 +1,4 @@
+interface:
+  display_name: "Xiaodu Elder Companion"
+  short_description: "Xiaodu elder-care companion flows"
+  default_prompt: "Use $xiaodu-elder-companion to plan and execute a Xiaodu elder-care companion workflow."
