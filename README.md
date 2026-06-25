@@ -13,6 +13,7 @@
 - **统一任务查询**：查询长任务执行状态与结果
 - **设备管理**：获取用户绑定的在线设备列表
 - **资源推送**：推送图片、视频、音频到小度设备
+- **网页打开**：在指定小度屏幕设备上打开 HTTP/HTTPS 页面
 - **技能查询与打开**：查询当前设备可打开的小度技能，并按 `app_key` 下发打开指令
 
 ## 📋 目录
@@ -261,7 +262,27 @@ which mcp-proxy
 
 ---
 
-### 8. 查询小度技能 (`query_xiaodu_skills`)
+### 8. 打开网页 (`xiaodu_open_web_page`)
+
+在指定小度屏幕设备上打开一个 HTML 页面。
+
+#### 参数
+
+- `url` (string, required)：要在设备上打开的页面地址，仅支持 `http` / `https`
+- `cuid` (string, required)：设备 CUID
+- `client_id` (string, required)：设备 client_id
+
+#### 返回值
+
+- `Dict[str, Any]`
+  - `success`：是否成功下发打开指令
+  - `message`：结果说明
+  - `url`：本次打开的页面地址
+  - `push_result`：PushService 下发结果，成功时返回
+
+---
+
+### 9. 查询小度技能 (`query_xiaodu_skills`)
 
 查询当前 MCP 支持打开的小度技能列表。
 
@@ -284,7 +305,7 @@ which mcp-proxy
 
 ---
 
-### 9. 打开小度技能 (`xiaodu_open_skill`)
+### 10. 打开小度技能 (`xiaodu_open_skill`)
 
 按 `app_key` 打开一个小度技能。
 
