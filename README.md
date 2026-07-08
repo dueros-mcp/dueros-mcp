@@ -75,7 +75,7 @@
 | [`list_user_devices`](docs/tools.md#1-获取设备列表-list_user_devices) | 获取用户绑定的在线设备列表 |
 | [`control_xiaodu`](docs/tools.md#2-设备控制-control_xiaodu) | 通过自然语言指令控制小度设备 |
 | [`xiaodu_speak`](docs/tools.md#3-语音播报-xiaodu_speak) | 让小度设备朗读指定文本 |
-| [`xiaodu_send_notification`](docs/tools.md#4-发送通知-xiaodu_send_notification) | 向小度 App 发送系统通知并保存到消息中心 |
+| [`xiaodu_send_notification`](docs/tools.md#4-发送通知-xiaodu_send_notification) | 向小度 App 或设备发送系统通知 |
 | [`xiaodu_take_photo`](docs/tools.md#5-设备拍照-xiaodu_take_photo) | 触发支持摄像头的设备拍照并返回图像 |
 | [`xiaodu_record_video`](docs/tools.md#6-设备录像-xiaodu_record_video) | 异步创建录像任务并返回可查询结果 |
 | [`xiaodu_get_task`](docs/tools.md#7-查询任务状态-xiaodu_get_task) | 统一查询长任务执行状态与结果 |

@@ -9,7 +9,7 @@
 | [`list_user_devices`](#1-获取设备列表-list_user_devices) | 获取用户绑定的在线设备列表 |
 | [`control_xiaodu`](#2-设备控制-control_xiaodu) | 通过自然语言指令控制小度设备 |
 | [`xiaodu_speak`](#3-语音播报-xiaodu_speak) | 让小度设备朗读指定文本 |
-| [`xiaodu_send_notification`](#4-发送通知-xiaodu_send_notification) | 向小度 App 发送系统通知 |
+| [`xiaodu_send_notification`](#4-发送通知-xiaodu_send_notification) | 向小度 App 或设备发送系统通知 |
 | [`xiaodu_take_photo`](#5-设备拍照-xiaodu_take_photo) | 触发设备拍照并返回图像 |
 | [`xiaodu_record_video`](#6-设备录像-xiaodu_record_video) | 异步创建录像任务 |
 | [`xiaodu_get_task`](#7-查询任务状态-xiaodu_get_task) | 统一查询长任务状态与结果 |
@@ -68,13 +68,14 @@
 
 ### 4. 发送通知 (`xiaodu_send_notification`)
 
-向小度 App 或设备发送系统通知并保存到消息中心。当前仅支持向小度 App 发送消息。
+向小度 App 或指定小度设备发送系统通知。
 
 #### 参数
 
 - `target` (string, required)：通知目标，取值为 `app` 或 `device`
 - `title` (string, required)：通知标题，最长 `100` 个字符
 - `description` (string, required)：通知正文，最长 `1000` 个字符
+- `url` (string, optional)：通知详情页链接，仅支持 `http` / `https`，最长 `2048` 个字符
 - `cuid` (string, optional)：设备 CUID，`target=device` 时必填
 - `client_id` (string, optional)：设备 client_id，`target=device` 时必填
 
@@ -82,7 +83,9 @@
 
 - `Dict[str, Any]`
   - `notification_id`：通知 ID
-  - `status`：通知发送状态，可能为 `sent`、`failed`、`unknown` 或 `unsupported`
+  - `status`：通知发送状态，可能为 `sent`、`failed` 或 `unknown`
+  - `target`：通知目标，发送到设备时返回 `device`
+  - `has_url`：本次通知是否携带详情链接
   - `message`：结果说明
   - `error_code`：失败时的错误码
   - `retryable`：失败时是否建议重试
