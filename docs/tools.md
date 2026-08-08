@@ -13,10 +13,12 @@
 | [`xiaodu_take_photo`](#5-设备拍照-xiaodu_take_photo) | 触发设备拍照并返回图像 |
 | [`xiaodu_record_video`](#6-设备录像-xiaodu_record_video) | 异步创建录像任务 |
 | [`xiaodu_get_task`](#7-查询任务状态-xiaodu_get_task) | 统一查询长任务状态与结果 |
-| [`push_resource_to_xiaodu`](#8-资源推送-push_resource_to_xiaodu) | 推送图片、视频、音频到设备 |
-| [`xiaodu_open_web_page`](#9-打开网页-xiaodu_open_web_page) | 在屏幕设备上打开 HTTP/HTTPS 页面 |
-| [`query_xiaodu_skills`](#10-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
-| [`xiaodu_open_skill`](#11-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
+| [`xiaodu_trigger_ai_call`](#8-触发-ai-通话-xiaodu_trigger_ai_call) | 创建异步 AI 通话任务 |
+| [`xiaodu_get_ai_call_task_status`](#9-查询-ai-通话任务状态-xiaodu_get_ai_call_task_status) | 查询 AI 通话任务状态 |
+| [`push_resource_to_xiaodu`](#10-资源推送-push_resource_to_xiaodu) | 推送图片、视频、音频到设备 |
+| [`xiaodu_open_web_page`](#11-打开网页-xiaodu_open_web_page) | 在屏幕设备上打开 HTTP/HTTPS 页面 |
+| [`query_xiaodu_skills`](#12-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
+| [`xiaodu_open_skill`](#13-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
 
 ---
 
@@ -149,7 +151,47 @@
 
 ---
 
-### 8. 资源推送 (`push_resource_to_xiaodu`)
+### 8. 触发 AI 通话 (`xiaodu_trigger_ai_call`)
+
+创建异步 AI 通话任务。该接口只负责创建任务，不会等待通话完成；创建成功后需要保存返回的 `task_id`，并调用 `xiaodu_get_ai_call_task_status` 轮询任务状态。
+
+#### 参数
+
+- `client_id` (string, required)：目标小度设备的客户端标识符
+- `cuid` (string, required)：目标小度设备的 CUID
+- `target` (string, required)：通话对象的角色描述，最长 `64` 个字符
+- `task_description` (string, required)：AI 通话需要完成的任务描述，最长 `500` 个字符
+
+#### 返回值
+
+- `Dict[str, Any]`
+  - `task_id`：任务唯一标识，后续查询必须使用该值
+  - `status`：任务状态，创建成功时通常为 `PENDING`；创建失败时可能直接为 `FAILED`
+  - `err_code`：下游错误码，`0` 表示创建成功
+  - `message`：结果说明
+
+---
+
+### 9. 查询 AI 通话任务状态 (`xiaodu_get_ai_call_task_status`)
+
+查询 AI 通话任务状态。调用方应使用 `xiaodu_trigger_ai_call` 返回的同一个 `task_id` 持续轮询，直到任务进入 `COMPLETED` 或 `FAILED` 终态。
+
+#### 参数
+
+- `task_id` (string, required)：`xiaodu_trigger_ai_call` 返回的任务 ID，最长 `128` 个字符
+
+#### 返回值
+
+- `Dict[str, Any]`
+  - `task_id`：任务 ID
+  - `status`：任务状态，可能为 `PENDING`、`ACTIVE`、`PROCESSING`、`COMPLETED`、`FAILED`
+  - `interaction_report`：通话完成后的交互报告，`status=COMPLETED` 时可能包含 `full_transcript`
+  - `err_code`：失败或下游异常时的错误码
+  - `message`：结果说明
+
+---
+
+### 10. 资源推送 (`push_resource_to_xiaodu`)
 
 推送图片、图片+背景音、视频、音频到小度设备。
 
@@ -166,7 +208,7 @@
 
 ---
 
-### 9. 打开网页 (`xiaodu_open_web_page`)
+### 11. 打开网页 (`xiaodu_open_web_page`)
 
 在指定小度屏幕设备上打开一个 HTML 页面。
 
@@ -186,7 +228,7 @@
 
 ---
 
-### 10. 查询小度技能 (`query_xiaodu_skills`)
+### 12. 查询小度技能 (`query_xiaodu_skills`)
 
 查询当前 MCP 支持打开的小度技能列表。
 
@@ -209,7 +251,7 @@
 
 ---
 
-### 11. 打开小度技能 (`xiaodu_open_skill`)
+### 13. 打开小度技能 (`xiaodu_open_skill`)
 
 按 `app_key` 打开一个小度技能。
 
@@ -247,7 +289,20 @@
 - 最大录制时长为 `120000ms`
 - 建议优先使用短视频场景，避免不必要的长任务占用
 
-### 4. 技能打开的使用方式
+### 4. AI 通话任务的使用方式
+
+推荐按两步使用：
+
+1. 调用 `xiaodu_trigger_ai_call` 创建任务并获取 `task_id`
+2. 轮询调用 `xiaodu_get_ai_call_task_status(task_id)` 获取状态和最终结果
+
+注意事项：
+
+- `PENDING`、`ACTIVE`、`PROCESSING` 都不是终态，需要继续轮询。
+- `COMPLETED` 和 `FAILED` 是终态，分别表示任务完成或失败。
+- `COMPLETED` 时可读取 `interaction_report`，其中可能包含 `full_transcript`。
+
+### 5. 技能打开的使用方式
 
 推荐按两步使用：
 
