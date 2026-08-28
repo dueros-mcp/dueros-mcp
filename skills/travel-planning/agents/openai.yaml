@@ -1,0 +1,4 @@
+interface:
+  display_name: "旅行规划"
+  short_description: "规划旅行路线、住宿交通、预算，并生成可发布的精美行程网页"
+  default_prompt: "Use $travel-planning to create a practical travel itinerary and a polished shareable webpage."
