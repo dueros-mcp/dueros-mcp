@@ -50,7 +50,8 @@ Use these Xiaodu MCP tools when available:
 - `push_resource_to_xiaodu`: push image, image with BGM, video, or audio resources.
 - `xiaodu_take_photo`: take a photo after device notice when appropriate. If it returns inline Base64 image content that is too long to inspect in terminal output, save the raw output to `/private/tmp/<name>.txt`, run `scripts/decode_photo_result.py /private/tmp/<name>.txt -o /private/tmp/<name>.jpg`, then inspect the decoded image before making a location decision.
 - `xiaodu_record_video`: record video after device notice when appropriate.
-- `xiaodu_get_task`: poll async photo/video task status when needed.
+- `xiaodu_record_audio`: record audio after device notice when appropriate.
+- `xiaodu_get_task`: poll async photo/video/audio task status when needed.
 
 ## Opening Skills or Apps
 

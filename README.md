@@ -4,6 +4,8 @@
 
 一个基于 Model Context Protocol (MCP) 的小度智能终端服务，让 AI 应用能够控制小度设备。支持 Cursor、Claude、OpenClaw、Hermes、Cherry Studio、Cline 等兼容 MCP 协议的平台。
 
+如需直观了解原子能力的执行效果，可访问[小度 MCP 门户网站](https://xiaodu.baidu.com/dueros_mcp_portal)查看视频演示。
+
 ## 📋 目录
 
 - [快速开始](#-快速开始)
@@ -78,15 +80,16 @@
 | [`xiaodu_send_notification`](docs/tools.md#4-发送通知-xiaodu_send_notification) | 向小度 App 或设备发送系统通知 |
 | [`xiaodu_take_photo`](docs/tools.md#5-设备拍照-xiaodu_take_photo) | 触发支持摄像头的设备拍照并返回图像 |
 | [`xiaodu_record_video`](docs/tools.md#6-设备录像-xiaodu_record_video) | 异步创建录像任务并返回可查询结果 |
-| [`xiaodu_get_task`](docs/tools.md#7-查询任务状态-xiaodu_get_task) | 统一查询长任务执行状态与结果 |
-| [`xiaodu_trigger_ai_call`](docs/tools.md#8-触发-ai-通话-xiaodu_trigger_ai_call) | 创建异步 AI 通话任务 |
-| [`xiaodu_get_ai_call_task_status`](docs/tools.md#9-查询-ai-通话任务状态-xiaodu_get_ai_call_task_status) | 查询 AI 通话任务状态 |
-| [`push_resource_to_xiaodu`](docs/tools.md#10-资源推送-push_resource_to_xiaodu) | 推送图片、视频、音频到小度设备 |
-| [`xiaodu_open_web_page`](docs/tools.md#11-打开网页-xiaodu_open_web_page) | 在屏幕设备上打开 HTTP/HTTPS 页面 |
-| [`query_xiaodu_skills`](docs/tools.md#12-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
-| [`xiaodu_open_skill`](docs/tools.md#13-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
+| [`xiaodu_record_audio`](docs/tools.md#7-设备录音-xiaodu_record_audio) | 异步创建录音任务并返回可查询结果 |
+| [`xiaodu_get_task`](docs/tools.md#8-查询任务状态-xiaodu_get_task) | 统一查询长任务执行状态与结果 |
+| [`xiaodu_trigger_ai_call`](docs/tools.md#9-触发-ai-通话-xiaodu_trigger_ai_call) | 创建异步 AI 通话任务 |
+| [`xiaodu_get_ai_call_task_status`](docs/tools.md#10-查询-ai-通话任务状态-xiaodu_get_ai_call_task_status) | 查询 AI 通话任务状态 |
+| [`push_resource_to_xiaodu`](docs/tools.md#11-资源推送-push_resource_to_xiaodu) | 推送图片、视频、音频到小度设备 |
+| [`xiaodu_open_web_page`](docs/tools.md#12-打开网页-xiaodu_open_web_page) | 在屏幕设备上打开 HTTP/HTTPS 页面 |
+| [`query_xiaodu_skills`](docs/tools.md#13-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
+| [`xiaodu_open_skill`](docs/tools.md#14-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
 
-> 拍照/录像的并发限制、长任务的轮询方式、AI 通话轮询、技能打开的两步流程等实践建议，见[使用建议](docs/tools.md#-使用建议)。
+> 拍照/录像/录音的并发限制、长任务的轮询方式、AI 通话轮询、技能打开的两步流程等实践建议，见[使用建议](docs/tools.md#-使用建议)。
 
 ## 🧩 客户端示例
 
@@ -98,6 +101,7 @@
 
 ## 📚 文档索引
 
+- [小度 MCP 门户网站](https://xiaodu.baidu.com/dueros_mcp_portal) — 查看原子能力执行效果的视频演示
 - [接入指南](docs/integrations.md) — 各客户端 / Agent 的详细配置步骤
 - [工具接口参考](docs/tools.md) — 全部工具的参数、返回值与使用建议
 

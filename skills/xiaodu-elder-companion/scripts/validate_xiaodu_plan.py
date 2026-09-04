@@ -16,6 +16,7 @@ ALLOWED_TOOLS = {
     "push_resource_to_xiaodu",
     "xiaodu_take_photo",
     "xiaodu_record_video",
+    "xiaodu_record_audio",
     "xiaodu_get_task",
 }
 
