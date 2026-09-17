@@ -18,8 +18,9 @@
 | [`xiaodu_get_ai_call_task_status`](#10-查询-ai-通话任务状态-xiaodu_get_ai_call_task_status) | 查询 AI 通话任务状态 |
 | [`push_resource_to_xiaodu`](#11-资源推送-push_resource_to_xiaodu) | 推送图片、视频、音频到设备 |
 | [`xiaodu_open_web_page`](#12-打开网页-xiaodu_open_web_page) | 在屏幕设备上打开 HTTP/HTTPS 页面 |
-| [`query_xiaodu_skills`](#13-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
-| [`xiaodu_open_skill`](#14-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
+| [`xiaodu_play_music`](#13-播放音乐-xiaodu_play_music) | 按条件或指定歌单播放音乐 |
+| [`query_xiaodu_skills`](#14-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
+| [`xiaodu_open_skill`](#15-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
 
 ---
 
@@ -251,7 +252,34 @@
 
 ---
 
-### 13. 查询小度技能 (`query_xiaodu_skills`)
+### 13. 播放音乐 (`xiaodu_play_music`)
+
+在指定小度设备上播放音乐。支持按歌手、歌名、风格进行条件播放，也支持按指定顺序播放歌单；两种模式不能同时使用。本次播放会替换设备当前的播放列表，条件播放无匹配曲目时设备将保持静默。
+
+#### 参数
+
+- `cuid` (string, required)：设备 CUID
+- `client_id` (string, required)：设备 client_id
+- `singer` (array[string], optional)：歌手列表，支持多个歌手
+- `song` (string, optional)：歌名
+- `tag` (string, optional)：音乐风格或主题
+- `playlist` (array[object], optional)：按顺序播放的歌曲列表，最多 `20` 项；每项支持 `song`、`singer`，且至少填写一个字段
+
+使用条件播放时，`singer`、`song`、`tag` 至少填写一项；使用列表播放时，仅填写 `playlist`。
+
+#### 返回值
+
+- `Dict[str, Any]`
+  - `success`：是否成功下发播放指令
+  - `message`：结果说明
+  - `mode`：播放模式，条件播放为 `play`，列表播放为 `batch`
+  - `conditions`：条件播放时返回归一化后的播放条件
+  - `playlist`：列表播放时返回归一化后的歌曲列表
+  - `push_result`：PushService 下发结果，成功时返回
+
+---
+
+### 14. 查询小度技能 (`query_xiaodu_skills`)
 
 查询当前 MCP 支持打开的小度技能列表。
 
@@ -274,7 +302,7 @@
 
 ---
 
-### 14. 打开小度技能 (`xiaodu_open_skill`)
+### 15. 打开小度技能 (`xiaodu_open_skill`)
 
 按 `app_key` 打开一个小度技能。
 
@@ -326,7 +354,13 @@
 - `COMPLETED` 和 `FAILED` 是终态，分别表示任务完成或失败。
 - `COMPLETED` 时可读取 `interaction_report`，其中可能包含 `full_transcript`。
 
-### 5. 技能打开的使用方式
+### 5. 音乐播放模式的选择
+
+- 用户按歌手、歌名、风格或主题描述播放需求时，使用条件播放，只填写 `singer`、`song`、`tag` 中能够确定的字段。
+- 用户明确指定多首歌曲且在意播放顺序时，使用列表播放，只填写 `playlist`。
+- 条件参数与 `playlist` 不能同时填写，不要补充用户未提及的歌手、歌名或风格。
+
+### 6. 技能打开的使用方式
 
 推荐按两步使用：
 

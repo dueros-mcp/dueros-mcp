@@ -86,10 +86,11 @@
 | [`xiaodu_get_ai_call_task_status`](docs/tools.md#10-查询-ai-通话任务状态-xiaodu_get_ai_call_task_status) | 查询 AI 通话任务状态 |
 | [`push_resource_to_xiaodu`](docs/tools.md#11-资源推送-push_resource_to_xiaodu) | 推送图片、视频、音频到小度设备 |
 | [`xiaodu_open_web_page`](docs/tools.md#12-打开网页-xiaodu_open_web_page) | 在屏幕设备上打开 HTTP/HTTPS 页面 |
-| [`query_xiaodu_skills`](docs/tools.md#13-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
-| [`xiaodu_open_skill`](docs/tools.md#14-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
+| [`xiaodu_play_music`](docs/tools.md#13-播放音乐-xiaodu_play_music) | 按歌手、歌名、风格或指定歌单播放音乐 |
+| [`query_xiaodu_skills`](docs/tools.md#14-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
+| [`xiaodu_open_skill`](docs/tools.md#15-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
 
-> 拍照/录像/录音的并发限制、长任务的轮询方式、AI 通话轮询、技能打开的两步流程等实践建议，见[使用建议](docs/tools.md#-使用建议)。
+> 拍照/录像/录音的并发限制、长任务的轮询方式、AI 通话轮询、音乐播放模式、技能打开的两步流程等实践建议，见[使用建议](docs/tools.md#-使用建议)。
 
 ## 🧩 客户端示例
 
