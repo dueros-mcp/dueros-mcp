@@ -89,8 +89,9 @@
 | [`xiaodu_play_music`](docs/tools.md#13-播放音乐-xiaodu_play_music) | 按歌手、歌名、风格或指定歌单播放音乐 |
 | [`query_xiaodu_skills`](docs/tools.md#14-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
 | [`xiaodu_open_skill`](docs/tools.md#15-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
+| [`xiaodu_get_device_status`](docs/tools.md#16-查询设备状态-xiaodu_get_device_status) | 查询设备当前的屏幕、媒体播放、音量、模式设置和摄像头状态 |
 
-> 拍照/录像/录音的并发限制、长任务的轮询方式、AI 通话轮询、音乐播放模式、技能打开的两步流程等实践建议，见[使用建议](docs/tools.md#-使用建议)。
+> 拍照/录像/录音的并发限制、长任务的轮询方式、AI 通话轮询、音乐播放模式、技能打开的两步流程、设备状态的解读等实践建议，见[使用建议](docs/tools.md#-使用建议)。
 
 ## 🧩 客户端示例
 

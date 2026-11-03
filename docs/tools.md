@@ -21,6 +21,7 @@
 | [`xiaodu_play_music`](#13-播放音乐-xiaodu_play_music) | 按条件或指定歌单播放音乐 |
 | [`query_xiaodu_skills`](#14-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
 | [`xiaodu_open_skill`](#15-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
+| [`xiaodu_get_device_status`](#16-查询设备状态-xiaodu_get_device_status) | 查询设备当前的屏幕、媒体播放、音量、模式设置和摄像头状态 |
 
 ---
 
@@ -321,6 +322,43 @@
   - `name`：技能名称
   - `push_result`：PushService 下发结果
 
+---
+
+### 16. 查询设备状态 (`xiaodu_get_device_status`)
+
+查询指定小度设备此刻的状态，用于了解设备当前在做什么，以及判断后续操作是否可能打断用户。接口等待设备上报后直接返回状态快照，无需轮询任务接口。
+
+#### 参数
+
+- `cuid` (string, required)：设备 CUID
+- `client_id` (string, required)：设备 client_id
+
+#### 返回值
+
+- `Dict[str, Any]`
+  - `success`：是否成功获取设备状态
+  - `observed_at`：设备上报状态的 Unix 时间戳，单位秒；未上报时为 `null`
+  - `summary`：状态的文字概括
+  - `screen`：屏幕状态，包含 `on`（是否亮屏）、`display_mode`（显示模式）、`foreground_package`（前台应用包名）、`foreground_activity`（前台页面）
+  - `audio`：音频播放状态，包含 `activity`（播放状态）、`offset_ms`（播放进度，毫秒）、`source`（来源技能 ID）、`content`（音频内容）
+  - `video`：视频播放状态，包含 `activity`、`offset_ms`、`source`、`content`
+  - `long_video`：已接入的长视频 App 播放状态，包含 `activity`、`player_status`（播放器状态）、`offset_ms`、`source`、`content`
+  - `local_audio`：蓝牙等本地播放状态，包含 `activity`、`player`（播放器名称）、`status`（播放器状态）
+  - `speech`：语音播报状态，当前固定为 `null`
+  - `volume`：音量状态，包含 `level`（设备音量值）、`muted`（是否静音）
+  - `settings`：模式设置，包含 `do_not_disturb`（勿扰）、`sleep_protect`（睡眠保护）、`child_mode`（儿童模式）、`elder_mode`（长辈模式）、`desktop_mode`（桌面模式）
+  - `camera`：摄像头状态，包含 `on`（是否开启）、`occluded`（是否遮挡；关闭或未上报时为 `null`）
+  - `message`：查询失败时的结果说明；设备超时未返回状态时会提示稍后重试
+
+除 `success` 和失败时的 `message` 外，上述字段在查询成功时返回。设备未上报的模块为 `null`，不表示该功能已关闭；媒体内容无法解析时 `content` 为 `null`，不影响状态查询成功。
+
+#### 媒体状态与内容
+
+- `activity` 的常见值为 `PLAYING`（正在播放）、`PAUSED`（已暂停）、`STOPPED`（已停止）、`FINISHED`（已播完）、`BUFFER_UNDERRUN`（缓冲中）、`SCHEDULED_STOP`（即将停止）、`IDLE`（空闲）。
+- `audio.content`：音乐来源 `audio_music` 返回 `title`（歌名）、`artists`（歌手列表）、`song_id`（歌曲 ID）；有声来源 `audio_unicast` 返回 `title`（节目名）、`artists`（主播列表）、`album`（专辑）。
+- `video.content`：目前仅支持小度短视频来源 `ai.dueros.bot.short_video`，包含 `title`（标题）、`uploader`（作者）、`category`（分类）、`tags`（标签列表）、`duration_ms`（时长，毫秒）。
+- `long_video.content`：包含 `title`（当前播放名称，电视剧可带集数）、`series`（剧名）、`episode`（集数）、`category`（类型）、`genres`（题材列表）、`directors`（导演列表）、`actors`（演员列表，最多 `5` 位）、`duration_ms`（时长，毫秒）、`provider`（内容提供方）。
+
 ## 📌 使用建议
 
 ### 1. 拍照、录像与录音的并发建议
@@ -372,3 +410,11 @@
 - 不要手写或复用过期的 `app_key`，它是查询结果中的打开凭证。
 - 如果打开时返回“应用选择已过期，请重新查询”，需要重新调用 `query_xiaodu_skills` 获取新的 `app_key`。
 - 如果返回多个候选，应根据 `name` 和 `description` 让用户确认要打开哪一个。
+
+### 7. 设备状态的解读
+
+- 通过 `list_user_devices` 获取目标设备的 `cuid` 和 `client_id`，再调用 `xiaodu_get_device_status` 查询当前状态。
+- 结果仅代表 `observed_at` 对应时刻的快照，状态随时可能变化，不能将其作为之前某次操作的执行结果。
+- 媒体状态仅覆盖小度自带播放器、已接入的长视频 App 和蓝牙等本地播放。快手等第三方 App 的播放可能不会上报，即使该 App 是通过小度技能打开的；播放器均为空闲或 `summary` 未提及媒体时，仍需结合 `screen.foreground_package` 判断，不能断定设备没有播放内容。
+- 小度短视频暂停后的 `activity` 为 `STOPPED`，无法区分暂停与停止；长视频 App 暂停时 `activity` 仍可能为 `PLAYING`，无法据此判断是否暂停。
+- `long_video` 仅在已接入的长视频 App 处于前台时上报，退到后台或退出后为 `null`。
