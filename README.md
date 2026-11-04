@@ -90,8 +90,9 @@
 | [`query_xiaodu_skills`](docs/tools.md#14-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
 | [`xiaodu_open_skill`](docs/tools.md#15-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
 | [`xiaodu_get_device_status`](docs/tools.md#16-查询设备状态-xiaodu_get_device_status) | 查询设备当前的屏幕、媒体播放、音量、模式设置和摄像头状态 |
+| [`xiaodu_list_device_history`](docs/tools.md#17-查询设备历史-xiaodu_list_device_history) | 查询设备最近的交互记录，支持按时间范围筛选 |
 
-> 拍照/录像/录音的并发限制、长任务的轮询方式、AI 通话轮询、音乐播放模式、技能打开的两步流程、设备状态的解读等实践建议，见[使用建议](docs/tools.md#-使用建议)。
+> 拍照/录像/录音的并发限制、长任务的轮询方式、AI 通话轮询、音乐播放模式、技能打开的两步流程、设备状态与历史记录的解读等实践建议，见[使用建议](docs/tools.md#-使用建议)。
 
 ## 🧩 客户端示例
 

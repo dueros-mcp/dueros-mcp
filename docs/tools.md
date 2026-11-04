@@ -22,6 +22,7 @@
 | [`query_xiaodu_skills`](#14-查询小度技能-query_xiaodu_skills) | 查询当前设备可打开的小度技能 |
 | [`xiaodu_open_skill`](#15-打开小度技能-xiaodu_open_skill) | 按 `app_key` 打开小度技能 |
 | [`xiaodu_get_device_status`](#16-查询设备状态-xiaodu_get_device_status) | 查询设备当前的屏幕、媒体播放、音量、模式设置和摄像头状态 |
+| [`xiaodu_list_device_history`](#17-查询设备历史-xiaodu_list_device_history) | 查询设备最近的交互记录，支持按时间范围筛选 |
 
 ---
 
@@ -359,6 +360,47 @@
 - `video.content`：目前仅支持小度短视频来源 `ai.dueros.bot.short_video`，包含 `title`（标题）、`uploader`（作者）、`category`（分类）、`tags`（标签列表）、`duration_ms`（时长，毫秒）。
 - `long_video.content`：包含 `title`（当前播放名称，电视剧可带集数）、`series`（剧名）、`episode`（集数）、`category`（类型）、`genres`（题材列表）、`directors`（导演列表）、`actors`（演员列表，最多 `5` 位）、`duration_ms`（时长，毫秒）、`provider`（内容提供方）。
 
+---
+
+### 17. 查询设备历史 (`xiaodu_list_device_history`)
+
+查询指定小度设备最近的交互记录，了解用户问过什么、小度的回复，以及点播内容、打开应用等交互。记录按写入时间从新到旧返回，支持按时间范围筛选；接口直接返回查询结果，无需轮询。
+
+#### 参数
+
+- `cuid` (string, required)：设备 CUID
+- `client_id` (string, required)：设备 client_id
+- `limit` (int, optional)：最多返回的条数，默认 `20`，取值限制在 `1` 至 `50`；超出范围时按边界值处理
+- `start_time` (string, optional)：开始时间，包含该时间；支持 `YYYY-MM-DD HH:MM:SS`、`YYYY-MM-DD HH:MM`、`YYYY-MM-DD`，无时区时按北京时间处理，也接受带时区的 ISO 8601；不传则不限制开始时间
+- `end_time` (string, optional)：结束时间，不包含该时间，格式与 `start_time` 相同；不传则不限制结束时间
+
+时间范围按记录写入时间筛选。同时传入 `start_time` 和 `end_time` 时，开始时间必须早于结束时间；时间格式错误或范围无效时返回 `success=false` 和说明信息。
+
+#### 返回值
+
+- `Dict[str, Any]`
+  - `success`：查询是否成功
+  - `count`：实际返回的记录条数，成功时返回
+  - `items`：交互记录列表，成功时返回；没有可展示的记录时为空列表
+  - `message`：查询失败、没有可展示的记录，或指定时间范围可能存在已清理记录时的说明信息，按需返回
+
+#### 记录字段
+
+- `time`：交互时间，格式为 `YYYY-MM-DD HH:MM:SS`，北京时间
+- `timestamp`：交互时间的 Unix 时间戳，单位秒；缺失时回退为记录写入时间
+- `initiator`：发起方，`user` 表示可确定由用户发起，`unknown` 表示无法判断
+- `trigger`：触发方式，取值为 `voice`（语音）、`text`（文本指令）、`click`（触屏点击）、`app_open`（打开应用）、`event`（其他事件）
+- `query`：用户请求或指令文本
+- `skill`：处理请求的技能 ID，与 `xiaodu_get_device_status` 中的 `source` 含义一致
+- `reply`：小度的回复文本，超过 `200` 个字符时截断并追加省略号
+- `card`：屏幕卡片信息，可包含 `title`（标题）、`text`（正文，超过 `100` 个字符时截断并追加省略号）；与回复相同的正文不重复返回
+- `media`：涉及的音视频信息，包含 `type`（媒体类型）、`title`（标题），以及按内容类型返回的 `artists`（歌手或主播列表）、`album`（专辑）、`duration_ms`（时长，毫秒）、`category`（分类）、`provider`（内容提供方）；长视频还可能包含 `episode`、`genres`、`actors`（最多 `5` 位）、`directors`
+- `app`：打开的应用，可包含 `name`（应用名称）、`package`（应用包名）
+- `click_target`：触屏点击的目标名称
+- `summary`：该条交互的一句话概括
+
+记录中没有值的字段会被省略。`media.type` 支持 `music`（音乐）、`unicast`（有声）、`short_video`（短视频）、`news`（新闻）、`long_video`（长视频）、`radio`（电台），以及 `audio` / `video`（未细分的音频 / 视频）。
+
 ## 📌 使用建议
 
 ### 1. 拍照、录像与录音的并发建议
@@ -418,3 +460,11 @@
 - 媒体状态仅覆盖小度自带播放器、已接入的长视频 App 和蓝牙等本地播放。快手等第三方 App 的播放可能不会上报，即使该 App 是通过小度技能打开的；播放器均为空闲或 `summary` 未提及媒体时，仍需结合 `screen.foreground_package` 判断，不能断定设备没有播放内容。
 - 小度短视频暂停后的 `activity` 为 `STOPPED`，无法区分暂停与停止；长视频 App 暂停时 `activity` 仍可能为 `PLAYING`，无法据此判断是否暂停。
 - `long_video` 仅在已接入的长视频 App 处于前台时上报，退到后台或退出后为 `null`。
+
+### 8. 设备历史的查询与解读
+
+- 了解设备最近发生过什么时使用 `xiaodu_list_device_history`；了解设备此刻在做什么时使用 `xiaodu_get_device_status`。
+- 查询最近的交互时只需指定 `limit`，用户关注具体时间段时再传入 `start_time`、`end_time`。设备仅保留最近 `50` 条原始记录，接口会过滤空记录等不可展示内容，返回条数可能少于 `limit`；扩大时间范围或提高 `limit` 无法恢复已清理记录。
+- `initiator=unknown` 不表示一定由用户发起。文本指令可能来自 `control_xiaodu`，打开应用可能来自 `xiaodu_open_skill`；设备控制类请求通常没有 `reply`，不能仅凭 `query` 认定操作已执行成功。
+- 点播或切换时，`media` 表示新内容；停止播放时，`media` 可能是被停止的内容，不能据此认定设备仍在播放。
+- `xiaodu_play_music`、`xiaodu_speak`、资源推送、发送通知、打开网页等 MCP 指令，以及按键、触屏暂停等设备本地操作、歌单自动切歌和播放进度，不在记录覆盖范围内。没有记录不代表操作没有发生。
